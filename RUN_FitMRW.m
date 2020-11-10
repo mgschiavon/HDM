@@ -69,7 +69,7 @@ printAll = 0;   % Flag for printing full random walk
     f(i).cov = 0.1;
     f(i).lim = [2e-7,0.2];
     i = i + 1;
-    f(i).par = 'Y_K';
+    f(i).par = 'Y_k';
     f(i).cov = 0.1;
     f(i).lim = [1e-4,100];
     clear i
