@@ -11,7 +11,7 @@ clear
 
 %% Inputs & conditions
 % Transcriptional model:
-M = 'SimpleModel';      % Options: 'SimpleModel'
+M = 'SimpleModel_v02';      % Options: 'SimpleModel'
 % Data
 ExID = 'h37AB';	% Experiment (TF) to consider
     load('DATA_HDM.mat','X');
@@ -48,6 +48,7 @@ printAll = 0;   % Flag for printing full random walk
     
     p.Y_m = 0.1;        % [nM/min]
     p.Y_a  = 0.01;
+    p.Y_n  = 1;
     p.Y_k  = 1;         % [nM]
     
 % Parameters to fit:
@@ -68,6 +69,10 @@ printAll = 0;   % Flag for printing full random walk
     f(i).par = 'Y_a';
     f(i).cov = 0.1;
     f(i).lim = [2e-7,0.2];
+    i = i + 1;
+    f(i).par = 'Y_n';
+    f(i).cov = 0.1;
+    f(i).lim = [1e-4,100];
     i = i + 1;
     f(i).par = 'Y_k';
     f(i).cov = 0.1;
