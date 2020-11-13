@@ -187,6 +187,8 @@ end
         end
         if(strcmp(M,'SimpleModel'))
             Ye = FN_SS_SimpleModel(p);
+        elseif(strcmp(M,'SimpleModel_v02'))
+            Ye = FN_SS_SimpleModel_v02(p);
         else
             'ERROR: Transcriptional model not defined. Options: SimpleHill, HillxBasal, Mechanistic, Allosteric.'
         end
