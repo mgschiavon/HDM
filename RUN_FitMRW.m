@@ -159,16 +159,31 @@ else
     fig.PaperPosition = [0 0 18 8];
     fig.Position = fig.PaperPosition;
     [a b] = sort(minE);
+    C = [0 0 0;
+    1 0.6 0;
+    0.85 0.85 0.85];
     for i = 1:length(f)
         subplot(2,ceil(length(f)/2),i)
         hold on;
-            scatter(minE,bestP(:,i))
-            for ii = 1:5
-                scatter(a(ii),bestP(b(ii),i),'filled')
-            end
+        scatter(minE(b([101:1000]))/(size(D,1)*size(D,2)),...
+            bestP(b([101:1000]),i),25,...
+            'MarkerFaceColor',C(3,:),...
+            'MarkerEdgeColor',C(3,:)-0.1)
+        scatter(minE(b([1:100]))/(size(D,1)*size(D,2)),...
+            bestP(b([1:100]),i),25,...
+            'MarkerFaceColor',C(2,:),...
+            'MarkerEdgeColor',C(2,:)-[0.1 0.1 0])
+        for ii = 1
+            scatter(a(ii)/(size(D,1)*size(D,2)),...
+                bestP(b(ii),i),25,[0 0 0],'filled')
+        end
                 ylabel(f(i).par)
-                xlabel('min(error)')
-                set(gca,'XScale','log')
+                xlabel('MSE')
+                title(cat(2,'Med(',f(i).par,')=',...
+                    num2str(median(bestP(b([1:1000]),i)),4)))
+                set(gca,'XScale','log','YScale','log',...
+                    'XMinorGrid','off','YMinorGrid','off',...
+                    'XTick',10.^[-6:1:6])
                 box on
                 grid on
     end
