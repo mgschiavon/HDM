@@ -73,14 +73,6 @@ printAll = 0;   % Flag for printing full random walk
     f(i).par = 'Y_k';
     f(i).cov = 0.1;
     f(i).lim = [1e-4,100];
-    i = i + 1;
-    f(i).par = 'A_m';
-    f(i).cov = 0.1;
-    f(i).lim = [2e-6,2];
-    i = i + 1;
-    f(i).par = 'D_m';
-    f(i).cov = 0.1;
-    f(i).lim = [2e-6,2];
     clear i
 
 %% Run fitting:
