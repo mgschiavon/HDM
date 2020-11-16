@@ -41,7 +41,7 @@ printAll = 0;   % Flag for printing full random walk
     p.D_a  = 0.00483;
     
     p.g  = 0.01;        % [1/min]
-    p.nM = 0.04;        % Assume the measured fluorescence arbitrary units ([a.u.]) are proportional to the molecule concentration ([nM]), with 1 a.u. = 0.4 nM.
+    p.nM = 0.4;         % Assume the measured fluorescence arbitrary units ([a.u.]) are proportional to the molecule concentration ([nM]), with 1 a.u. = 0.4 nM.
     
     p.eP = 1;           % [1/(nM min)]
     p.eM = 1;           % [1/min]
