@@ -10,11 +10,11 @@ module mm
 
 	# ODE system
 	odeHD = @ode_def begin
-		dA  = fM(xE,hE,mE,aE,nE,kE) - (g * A) + (eM * AD) - (eP * A * D)
-		dD  =  mC                   - (g * D) + (eM * AD) - (eP * A * D) + (bM * DN) - (bP * D * N)
-		dN  = fM(xP,hP,mP,aP,nP,kP) - (g * N)                            + (bM * DN) - (bP * D * N)
-		dAD =                       - (g * AD) - (eM * AD) + (eP * A * D)
-		dDN =                       - (g * DN)                            - (bM * DN) + (bP * D * N)
+		dA  = mA - (g * A) + (eM * AD) - (eP * A * D)
+		dD  = mD - (g * D) + (eM * AD) - (eP * A * D) + (bM * DN) - (bP * D * N)
+		dN  = mN - (g * N)                            + (bM * DN) - (bP * D * N)
+		dAD =   - (g * AD) - (eM * AD) + (eP * A * D)
+		dDN =   - (g * DN)                            - (bM * DN) + (bP * D * N)
 		dY  = (mY * ((a * k) + AD)/(k + AD + D + DN)) - (g * Y)
-	end g mC mE aE nE kE hE xE mP aP nP kP hP xP mY a n k eP eM bP bM;
+	end g mA mD mN mY a n k eP eM bP bM;
 end 
