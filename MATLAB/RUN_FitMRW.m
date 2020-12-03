@@ -13,7 +13,7 @@ clear
 % Transcriptional model:
 M = 'SimpleModel_v02';      % Options: 'SimpleModel'
 % Data
-ExID = 'h154AB';	% Experiment (TF) to consider
+ExID = 'h37AB_c3';	% Experiment (TF) to consider
     load('DATA_HDM.mat','X');
     p.A_H = X.(ExID).Pg;
     p.D_H = X.(ExID).E2;
