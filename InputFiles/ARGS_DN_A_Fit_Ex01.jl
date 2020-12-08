@@ -5,6 +5,6 @@ mrw  = (pOp  = [:mU,:mW,:eP],	# Parameters to optimize
 		iter = 1000,			# Number of iterations per optimization run
 		cov  = [0.1,0.1,0.1],	# Covariance to calculate parameter random walk
 		M    = 10,				# "Mutation step size" for multiplicative random walk
+		rnP0 = 0,				# Flag for random initial values of parameters to optimize
 		temp = 0,				# Flag for simulated annealing (if 0, MRW)
-		prtW = 0,				# Flag for printing each walk step
-		prtD = 0);				# Flag for printing full DY curve
+		prtW = 0);				# Flag for printing each walk step

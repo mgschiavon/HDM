@@ -9,68 +9,78 @@
 
 ## INPUTS:
 # iARG = (mm : Label for motif file, ex : Label for parameters file, pp : Label for perturbation type, an : Chose analysis type);
-include(string("InputFiles\\ARGS_",iARG.mm,"_Pert_",iARG.ex,".jl"))	# Perturbation details
-include(string("InputFiles\\ARGS_",iARG.mm,"_Par_",iARG.ex,".jl"))	# Core parameters
+include(string("InputFiles\\ARGS_",iARG.mm,"_Par_",iARG.ex,".jl"))	# System parameters
 
 # Load functions & parameters:
 using DelimitedFiles
-mm = include(string("Library\\Md_",iARG.mm,".jl"));
-fn = include(string("Library\\FN_DYs.jl"));
+mm = include(string("Library\\Md_",iARG.mm,".jl"));	# ODE system
+fn = include(string("Library\\FN_HDM.jl"));			# Functions
 pO = copy(p);
 
+# Load data to compare:
+using CSV
+using DataFrames
+Xe = CSV.File("DATA_Fig2B_Mean.csv") |> Tables.matrix;
+Pg = Xe[1,2:end];
+
 # Run analysis
-p = copy(pO);
-open(string("OUT_ExDyn_",iARG.mm,"_",iARG.ex,"_",iARG.pp,"_",iARG.ax,".txt"), "w") do io
-	writedlm(io, [vcat("FB","rho","time",[string(i) for i in mm.odeNF.syms])],'\t');
-	rtol = 1e-12;
-	uns = 0;
-	ssR = ones(length(mm.odeFB.syms));
-	soR = ones(length(mm.odeNF.syms));
-	while(rtol >= 1e-24)
-		# Reference steady state:
-		ssR = fn.SS(mm.odeFB, p, ssR, rtol, uns);
-		# Locally analogous system reference steady state:
-		mm.localNF(p,ssR);
-		soR = fn.SS(mm.odeNF, p, soR, rtol, uns);
-		if(abs(mm.outFB(ssR) - mm.outNF(soR)) > 1e-4)
-			rtol *= 1e-3;
-			if(rtol < 1e-24)
-				println("ERROR: Check NF system (reltol=",rtol*1e3,").")
-				println(vcat(pert.p,i,[p[i] for i in mm.odeFB.params],mm.outFB(ssR),mm.outNF(soR)))
-				#throw(DomainError("x-("))
-				if(abs(mm.outFB(ssR) - mm.outNF(soR))/mm.outFB(ssR) > 0.01)
-					flg1 = 0;
-					println("SS results excluded!")
+open(string("OUT_Fit_",iARG.mm,"_",iARG.ex,".txt"), "w") do io
+	writedlm(io, [vcat("Run","Iteration","MSE",[string(param) for param in mrw.pOp],[string(i) for i in mm.odeHD.syms])],'\t');
+	for ruN in 1:mrw.runs
+		println("RUN #",ruN)
+		p = copy(pO)
+		## Random initial values of parameters to optimize:
+		if(mrw.rnP0==1)
+			for i in 1:length(mrw.pOp)
+				p[mrw.pOp[i]] = 10 .^ (rand(Uniform(mrw.pMin[i], mrw.pMax[i])));
+			end
+		end
+		## Temperature function for simulated annealing:
+		if(mrw.temp==1)
+			mrwT = collect(mrw.iter:-1:1) ./ mrw.iter;
+		else
+			mrwT = ones(mrw.iter); # NOTE: For MRW, make T=1.
+		end
+		## Initialize system:
+		# TO DO: First calculation of steady states + MSE
+		r0 = zeros(length(mrw.pOp));
+		writedlm(io, [vcat(ruN,0,mse0,[p[i] for i in mrw.pOp],Xss0)],'\t')
+		# Optimization iterations:
+		println("I: MSE = ",mse)
+		for i in 1:mrw.iter
+			# Random values to update parameters:
+			rI = rand(MvNormal(zeros(length(mrw.pOp)), zeros(length(mrw.pOp)) .+ mrw.cov));
+			# Update parameter values:
+			for pI in 1:length(mrw.pOp)
+				r0[pI] = p[mrw.pOp[pI]]; # Save previous value
+				p[mrw.pOp[pI]] *= (mrw.M .^ rI[pI]); # Update value
+				# Exclude values outside regime of exploration:
+				if p[mrw.pOp[pI]] < (10.0 ^ mrw.pMin[pI])
+					p[mrw.pOp[pI]] = (10.0 ^ mrw.pMin[pI])
+				elseif p[mrw.pOp[pI]] > (10.0 ^ mrw.pMax[pI])
+					p[mrw.pOp[pI]] = (10.0 ^ mrw.pMax[pI])
 				end
 			end
-		else
-			break
+			# TO DO: Calculate new steady states + MSE
+			# Evaluate if accept new parameter values or not:
+			if(rand() < exp((mse0 - mse1) / mrwT[i]))
+				# If yes, update "reference" system
+				mse0 = mse1;
+				Xss0 = Xss1;
+			else
+				# If not, revert to previous parameter values
+				for pI in 1:length(mrw.pOp)
+					p[mrw.pOp[pI]] = r0[pI];
+				end
+			end
+			# Print results (either every iteration, prtW==1, or in the last iteration):
+			if(mrw.prtW==1 || i==mrw.iter)
+				writedlm(io, [vcat(ruN,0,mse0,[p[i] for i in mrw.pOp],Xss0)],'\t')
+			end
 		end
+		println("F: minDY = ",mi0,"\t |DY| = ",op0,"\n")
 	end
-	# Feedback system:
-	x = fn.Dyn(mm.odeFB, p, ssR, 500.0);
-	for i in 1:length(x.t)
-		writedlm(io, [vcat(1,p[iARG.pp],x.t[i],x.u[i],"NaN")],'\t');
-	end
-	p[pert.p] *= pert.d;
-	x = fn.Dyn(mm.odeFB, p, last(x.u), 9500.0);
-	for i in 1:length(x.t)
-		writedlm(io, [vcat(1,p[iARG.pp],x.t[i]+500.0,x.u[i],"NaN")],'\t');
-	end
-	ssD = fn.SS(mm.odeFB, p, ssR, rtol, uns);
-	writedlm(io, [vcat(1,p[iARG.pp],"Inf",ssD,"NaN")],'\t');
-	p[pert.p] /= pert.d;
-	# No-Feedback system:
-	x = fn.Dyn(mm.odeNF, p, soR, 500.0);
-	for i in 1:length(x.t)
-		writedlm(io, [vcat(0,p[iARG.pp],x.t[i],x.u[i])],'\t');
-	end
-	p[pert.p] *= pert.d;
-	x = fn.Dyn(mm.odeNF, p, last(x.u), 9500.0);
-	for i in 1:length(x.t)
-		writedlm(io, [vcat(0,p[iARG.pp],x.t[i]+500.0,x.u[i])],'\t');
-	end
-	soD = fn.SS(mm.odeNF, p, soR, rtol, uns);
-	writedlm(io, [vcat(0,p[iARG.pp],"Inf",soD)],'\t');
-	p[pert.p] /= pert.d;
 end
+
+
+
