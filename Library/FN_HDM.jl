@@ -17,7 +17,7 @@ module fn
 	#        n  - Hill coefficie
 	#        k  - Dissociation constant
 	# OUPUT:      - Synthesis rate value
-	function fM(x,h,kX,b,m,a,n,k)
+	function iSynTF_mu(x,h,kX,b,m,a,n,k)
 		a2 = 1;
 		a1 = -(h + x + kX);
 		a0 = h * x;
