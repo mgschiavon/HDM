@@ -7,28 +7,21 @@
 #			ParameterizedFunctions
 #			DelimitedFiles
 
-## INPUTS:
-# iARG = (mm : Label for motif file, ex : Label for parameters file, pp : Label for perturbation type, an : Chose analysis type);
-include(string("InputFiles\\ARGS_",iARG.mm,"_Par_",iARG.ex,".jl"))	# System parameters
-
-# Load functions & parameters:
+# Load functions & system:
 using DelimitedFiles
 mm = include(string("Library\\Md_",iARG.mm,".jl"));	# ODE system
 fn = include(string("Library\\FN_HDM.jl"));			# Functions
-pO = copy(p);
 
-# Load data to compare:
-using CSV
-using DataFrames
-Xe = CSV.File("DATA_Fig2B_Mean.csv") |> Tables.matrix;
-Pg = Xe[1,2:end];
+## INPUTS:
+# iARG = (mm : Label for motif file, ex : Label for parameters file);
+include(string("InputFiles\\ARGS_",iARG.mm,"_Par_",iARG.ex,".jl"))	# System parameters
+include(string("InputFiles\\ARGS_",iARG.mm,"_Fit_",iARG.ex,".jl"))	# Fitting rules
 
 # Run analysis
 open(string("OUT_Fit_",iARG.mm,"_",iARG.ex,".txt"), "w") do io
 	writedlm(io, [vcat("Run","Iteration","MSE",[string(param) for param in mrw.pOp],[string(i) for i in mm.odeHD.syms])],'\t');
 	for ruN in 1:mrw.runs
 		println("RUN #",ruN)
-		p = copy(pO)
 		## Random initial values of parameters to optimize:
 		if(mrw.rnP0==1)
 			for i in 1:length(mrw.pOp)

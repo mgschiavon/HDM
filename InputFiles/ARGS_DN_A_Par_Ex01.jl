@@ -17,17 +17,18 @@ p = Dict([
 	:aP => 0.0153,    # Basal expression (in the absence of Z3PM)
 	:nP => 2.64,      # Hill coefficient for Z3PM regulation
 	:kP => 0.0683,    # Z3PM:promoter dissociation constant
-	:mA => NaN,	      # A synthesis rate (nM/min)
-	:mD => NaN,	      # D synthesis rate (nM/min)
-	:mN => NaN,	      # N synthesis rate (nM/min)
 	:mY => 0.1,       # Y maximum synthesis rate (nM/min)
-	:a  => 0.01,      # Basal activity
-	:n  => 2.5,       # Hill function
-	:k  => 1.0,       # Dissociation constant
-	:eP => 0.0375,    # A:D association (binding) rate (e.g. [0.0012,2000] 1/nM 1/min)
-	:eM => 0.0001,    # A:D dissociation (unbinding) rate (e.g. [0.05,140] 1/min)
+	:aY => 0.01,      # Basal activity
+	:nY => 2.5,       # Hill function
+	:kY => 1.0,       # Dissociation constant
 	:bP => 0.375,     # A:N association (binding) rate (e.g. [0.0012,2000] 1/nM 1/min)
-	:bM => 0.0001,    # A:N dissociation (unbinding) rate (e.g. [0.05,140] 1/min)
+	:bM => 0.01,      # A:N dissociation (unbinding) rate (e.g. [0.05,140] 1/min)
+	:eM => 0.01,      # A:D dissociation (unbinding) rate (e.g. [0.05,140] 1/min)
+	:eC => [0.0375,0.0375,0.0375], # A:D association (binding) rate - [154B_37A,154B_37B,154B_155A]
+	:mA => NaN,	      # BY FUNCTION: A synthesis rate (nM/min)
+	:mD => NaN,	      # BY FUNCTION: D synthesis rate (nM/min)
+	:mN => NaN,	      # BY FUNCTION: N synthesis rate (nM/min)
+	:eP => NaN,       # BY RULE: A:D association (binding) rate (e.g. [0.0012,2000] 1/nM 1/min)
 ]);
 
 # Calculate/update synthesis rate according to gene regulation (e.g. iSynTF_mu(x,h,kX,b,m,a,n,k)):
