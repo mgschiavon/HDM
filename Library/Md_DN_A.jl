@@ -9,12 +9,12 @@ module mm
 	using ParameterizedFunctions
 
 	# ODE system
-	odeHD = @ode_def begin
+	myODE = @ode_def begin
+		dY  = (mY * ((a * k) + AD)/(k + AD + D)) - (g * Y)
 		dA  = mA - (g * A) + (eM * AD) - (eP * A * D) + (bM * AN) - (bP * A * N)
 		dD  = mD - (g * D) + (eM * AD) - (eP * A * D)
 		dN  = mN - (g * N)                            + (bM * AN) - (bP * A * N)
 		dAD =   - (g * AD) - (eM * AD) + (eP * A * D)
 		dAN =   - (g * AN)                            - (bM * AN) + (bP * A * N)
-		dY  = (mY * ((a * k) + AD)/(k + AD + D)) - (g * Y)
 	end g mA mD mN mY a n k eP eM bP bM;
 end 
