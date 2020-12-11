@@ -12,21 +12,21 @@ mrw  = (pOp  = [:mU,:mW,:eP],	# Parameters to optimize
 # Load data to compare:
 using CSV
 using DataFrames
-Xe = CSV.File("DATA_Fig2B_Mean.csv") |> Tables.matrix;
-Hi = Xe[1,2:end];
-Xe = Xe[5:end,:];
+d.Xe = CSV.File("DATA_Fig2B_Mean.csv") |> Tables.matrix;
+d.Hi = d.Xe[1,2:end];
+d.Xe = d.Xe[5:end,:];
 
 # RULES:
-function myMSE(fn,mm,p,Xe,Hi)
+function myMSE(fn,mm,p,d)
 	mse = 0;
 	# Updating parameters & data according to the used construct:
 	for i in 1:length(p[:eC])
 		p[:eP] = p[:eC][i];
-		D = Xe[i,2:end];
+		D = d.Xe[i,2:end];
 		# Calculate steady state for each hormone concentration:
 		Y = zeros(length(D));
-		for h in 1:length(Hi)
-			p[:hP] = Hi[h];
+		for h in 1:length(d.Hi)
+			p[:hP] = d.Hi[h];
 			pSynth(p,iSynTF_mu);
 			# Calculate steady states:
 			ss = fn.SS(mm.myODE, p, ones(length(mm.myODE.syms)), 1e-4, 0);
