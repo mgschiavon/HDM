@@ -18,13 +18,22 @@ Xe = Xe[5:end,:];
 
 # RULES:
 function myMSE(fn,mm,p,Xe,Hi)
-	# Updating parameters according to the used construct:
+	mse = 0;
+	# Updating parameters & data according to the used construct:
 	for i in 1:length(p[:eC])
 		p[:eP] = p[:eC][i];
-		pSynth(p,iSynTF_mu);
 		D = Xe[i,2:end];
-		# TO DO: Calculate steady states (using function in FN_HDM)
-		# TO DO: Compare to data & calculate MSE (using function in FN_HDM)
+		# Calculate steady state for each hormone concentration:
+		Y = zeros(length(D));
+		for h in 1:length(Hi)
+			p[:hP] = Hi[h];
+			pSynth(p,iSynTF_mu);
+			# Calculate steady states:
+			ss = fn.SS(mm.myODE, p, ones(length(mm.myODE.syms)), 1e-4, 0);
+			Y[h] = ss[1];
+		end
+		# Compare to data & calculate MSE:
+		mse += (fn.MSE(X,D)/length(p[:eC]));
 	end
 	return mse
 end
