@@ -1,7 +1,10 @@
-# Heterodimer models
-# ODE simulations & other functions
-
-# Julia v.1.1.1
+## ODE FITTING PIPELINE - Heterodimer model
+#  ODE simulations & other functions
+#	Mariana Gómez-Schiavon
+#	November, 2020
+#		Julia v.1.1.1
+#		Required libraries:
+#			DifferentialEquations
 
 module fn
 	# Required libraries
