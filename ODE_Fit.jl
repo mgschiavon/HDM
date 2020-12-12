@@ -21,7 +21,7 @@ include(string("InputFiles\\ARGS_",iARG.mm,"_Fit_",iARG.ex,".jl"))	# Fitting rul
 
 # Run analysis
 open(string("OUT_Fit_",iARG.mm,"_",iARG.ex,".txt"), "w") do io
-	writedlm(io, [vcat("Run","Iteration","MSE",[string(param) for param in mrw.pOp]],'\t');
+	writedlm(io, [vcat("Run","Iteration","MSE",[string(param) for param in mrw.pOp])],'\t');
 	for ruN in 1:mrw.runs
 		println("RUN #",ruN)
 		## Random initial values of parameters to optimize:
