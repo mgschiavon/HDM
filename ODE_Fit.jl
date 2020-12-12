@@ -16,12 +16,12 @@ fn = include(string("Library\\FN_HDM.jl"));			# Functions
 
 ## INPUTS:
 # iARG = (mm : Label for motif file, ex : Label for parameters file);
-include(string("InputFiles\\ARGS_",iARG.mm,"_Par_",iARG.ex,".jl"))	# System parameters
-include(string("InputFiles\\ARGS_",iARG.mm,"_Fit_",iARG.ex,".jl"))	# Fitting rules
+include(string("InputFiles\\ARGS_",iARG.mm,"_Par_",iARG.ex,".jl"))	# System parameters (i.e. p structure -list of kinetic parameters)
+include(string("InputFiles\\ARGS_",iARG.mm,"_Fit_",iARG.ex,".jl"))	# Fitting rules (i.e. mrw structure -list of metropolis random walk parameters; d structure -experimental data/conditions; myMSE -specific function to calculate steady states & mean squared error)
 
 # Run analysis
 open(string("OUT_Fit_",iARG.mm,"_",iARG.ex,".txt"), "w") do io
-	writedlm(io, [vcat("Run","Iteration","MSE",[string(param) for param in mrw.pOp],[string(i) for i in mm.odeHD.syms])],'\t');
+	writedlm(io, [vcat("Run","Iteration","MSE",[string(param) for param in mrw.pOp],[string(i) for i in mm.myODE.syms])],'\t');
 	for ruN in 1:mrw.runs
 		println("RUN #",ruN)
 		## Random initial values of parameters to optimize:
@@ -37,9 +37,10 @@ open(string("OUT_Fit_",iARG.mm,"_",iARG.ex,".txt"), "w") do io
 			mrwT = ones(mrw.iter); # NOTE: For MRW, make T=1.
 		end
 		## Initialize system:
-		# TO DO: First calculation of steady states + MSE
+		# First calculation of steady states + MSE:
+		[Y0,mse0] = myMSE(fn,mm,p,d);
 		r0 = zeros(length(mrw.pOp));
-		writedlm(io, [vcat(ruN,0,mse0,[p[i] for i in mrw.pOp],Xss0)],'\t')
+		writedlm(io, [vcat(ruN,0,mse0,[p[i] for i in mrw.pOp],Y0)],'\t')
 		# Optimization iterations:
 		println("I: MSE = ",mse)
 		for i in 1:mrw.iter
@@ -56,12 +57,13 @@ open(string("OUT_Fit_",iARG.mm,"_",iARG.ex,".txt"), "w") do io
 					p[mrw.pOp[pI]] = (10.0 ^ mrw.pMax[pI])
 				end
 			end
-			# TO DO: Calculate new steady states + MSE
+			# Calculate new steady states + MSE:
+			[Y1,mse1] = myMSE(fn,mm,p,d);
 			# Evaluate if accept new parameter values or not:
 			if(rand() < exp((mse0 - mse1) / mrwT[i]))
 				# If yes, update "reference" system
 				mse0 = mse1;
-				Xss0 = Xss1;
+				Y0 = Y1;
 			else
 				# If not, revert to previous parameter values
 				for pI in 1:length(mrw.pOp)
@@ -70,7 +72,7 @@ open(string("OUT_Fit_",iARG.mm,"_",iARG.ex,".txt"), "w") do io
 			end
 			# Print results (either every iteration, prtW==1, or in the last iteration):
 			if(mrw.prtW==1 || i==mrw.iter)
-				writedlm(io, [vcat(ruN,0,mse0,[p[i] for i in mrw.pOp],Xss0)],'\t')
+				writedlm(io, [vcat(ruN,0,mse0,[p[i] for i in mrw.pOp],Y0)],'\t')
 			end
 		end
 		println("F: minDY = ",mi0,"\t |DY| = ",op0,"\n")
