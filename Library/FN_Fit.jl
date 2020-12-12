@@ -9,6 +9,7 @@
 module fn
 	# Required libraries
 	using DifferentialEquations
+	using Distributions
 	
 	# iSynTF transcription regulation function
 	# INPUT: x  - Total iSynTF concentration
