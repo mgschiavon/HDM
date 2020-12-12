@@ -12,28 +12,30 @@ mrw  = (pOp  = [:mU,:mW,:eP],	# Parameters to optimize
 # Load data to compare:
 using CSV
 using DataFrames
-d.Xe = CSV.File("DATA_Fig2B_Mean.csv") |> Tables.matrix;
-d.Hi = d.Xe[1,2:end];
-d.Xe = d.Xe[5:end,:];
+x = CSV.File("DATA_Fig2B_Mean.csv") |> Tables.matrix;
+d = (Hi = x[1,2:end],	# Hormone (Pg) concentrations tested
+	 Xe = x[5:end,:]);	# YFP steady state measurements
+# Adjust measurement units (1 a.u.= 0.4 nM):
+d.Xe[:,2:end] *= 0.4;
 
 # RULES:
 function myMSE(fn,mm,p,d)
+	Y = zeros(size(d.Xe));
+	Y[:,1] = d.Xe[:,1];
 	mse = 0;
 	# Updating parameters & data according to the used construct:
 	for i in 1:length(p[:eC])
 		p[:eP] = p[:eC][i];
-		D = d.Xe[i,2:end];
 		# Calculate steady state for each hormone concentration:
-		Y = zeros(length(D));
 		for h in 1:length(d.Hi)
 			p[:hP] = d.Hi[h];
 			pSynth(p,iSynTF_mu);
 			# Calculate steady states:
 			ss = fn.SS(mm.myODE, p, ones(length(mm.myODE.syms)), 1e-4, 0);
-			Y[h] = ss[1];
+			Y[i,h+1] = ss[1];
 		end
 		# Compare to data & calculate MSE:
-		mse += (fn.MSE(X,D)/length(p[:eC]));
+		mse += (fn.MSE(Y[i,2:end],d.Xe[i,2:end])/length(p[:eC]));
 	end
-	return mse
+	return [Y, mse]
 end
