@@ -38,7 +38,7 @@ open(string("OUT_Fit_",iARG.mm,"_",iARG.ex,".txt"), "w") do io
 		end
 		## Initialize system:
 		# First calculation of steady states + MSE:
-		mse0 = fn.MSE(myMSE(fn,mm,p,d),d.Xe);
+		mse0 = fn.MSE(mySS(fn,mm,p,d),d.Xe);
 		r0 = zeros(length(mrw.pOp));
 		writedlm(io, [vcat(ruN,0,mse0,[p[i] for i in mrw.pOp])],'\t')
 		# Optimization iterations:
@@ -58,7 +58,7 @@ open(string("OUT_Fit_",iARG.mm,"_",iARG.ex,".txt"), "w") do io
 				end
 			end
 			# Calculate new steady states + MSE:
-			mse1 = fn.MSE(myMSE(fn,mm,p,d),d.Xe);
+			mse1 = fn.MSE(mySS(fn,mm,p,d),d.Xe);
 			# Evaluate if accept new parameter values or not:
 			if(rand() < exp((mse0 - mse1) / mrwT[i]))
 				# If yes, update "reference" system
