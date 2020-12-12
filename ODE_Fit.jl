@@ -21,7 +21,7 @@ include(string("InputFiles\\ARGS_",iARG.mm,"_Fit_",iARG.ex,".jl"))	# Fitting rul
 
 # Run analysis
 open(string("OUT_Fit_",iARG.mm,"_",iARG.ex,".txt"), "w") do io
-	writedlm(io, [vcat("Run","Iteration","MSE",[string(param) for param in mrw.pOp],[string(i) for i in mm.myODE.syms])],'\t');
+	writedlm(io, [vcat("Run","Iteration","MSE",[string(param) for param in mrw.pOp]],'\t');
 	for ruN in 1:mrw.runs
 		println("RUN #",ruN)
 		## Random initial values of parameters to optimize:
@@ -40,9 +40,9 @@ open(string("OUT_Fit_",iARG.mm,"_",iARG.ex,".txt"), "w") do io
 		# First calculation of steady states + MSE:
 		[Y0,mse0] = myMSE(fn,mm,p,d);
 		r0 = zeros(length(mrw.pOp));
-		writedlm(io, [vcat(ruN,0,mse0,[p[i] for i in mrw.pOp],Y0)],'\t')
+		writedlm(io, [vcat(ruN,0,mse0,[p[i] for i in mrw.pOp])],'\t')
 		# Optimization iterations:
-		println("I: MSE = ",mse)
+		println("I: MSE = ",mse0)
 		for i in 1:mrw.iter
 			# Random values to update parameters:
 			rI = rand(MvNormal(zeros(length(mrw.pOp)), zeros(length(mrw.pOp)) .+ mrw.cov));
@@ -72,10 +72,11 @@ open(string("OUT_Fit_",iARG.mm,"_",iARG.ex,".txt"), "w") do io
 			end
 			# Print results (either every iteration, prtW==1, or in the last iteration):
 			if(mrw.prtW==1 || i==mrw.iter)
-				writedlm(io, [vcat(ruN,0,mse0,[p[i] for i in mrw.pOp],Y0)],'\t')
+				writedlm(io, [vcat(ruN,0,mse0,[p[i] for i in mrw.pOp])],'\t')
 			end
 		end
-		println("F: minDY = ",mi0,"\t |DY| = ",op0,"\n")
+		println("I: MSE = ",mse0)
+		# TO DO: Print output steady states
 	end
 end
 
