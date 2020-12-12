@@ -7,7 +7,7 @@ mrw  = (pOp  = [:mE,:mP,:bP],	# Parameters to optimize
 		M    = 10,				# "Mutation step size" for multiplicative random walk
 		rnP0 = 0,				# Flag for random initial values of parameters to optimize
 		temp = 0,				# Flag for simulated annealing (if 0, MRW)
-		prtW = 0);				# Flag for printing each walk step
+		prtW = 1);				# Flag for printing each walk step
 		
 # Load data to compare:
 using CSV
@@ -30,7 +30,7 @@ function mySS(fn,mm,p,d)
 			p[:hP] = d.Hi[h];
 			pSynth(p,fn.iSynTF_mu);
 			# Calculate steady states:
-			ss = fn.SS(mm.myODE, p, ones(length(mm.myODE.syms)), 1e-4, 0);
+			ss = fn.SS(mm.myODE, p, ones(length(mm.myODE.syms)), 1e-4, 1);
 			Y[i,h] = ss[1];
 		end
 	end

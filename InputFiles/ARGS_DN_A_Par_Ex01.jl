@@ -2,7 +2,7 @@
 p = Dict([
     :g  => 0.01,      # Dilution rate (e.g. [0.01,0.24] 1/min)
 	:xE => 0.0607,    # GEM iSynTF concentration (nM)
-	:hE => 1.0,       # E2 concentration (nM)
+	:hE => 36.0,      # E2 concentration (nM)
 	:mE => 0.0159,    # Maximum synthesis rate regulated by GEM
 	:kXE => 139.0,    # GEM:E2 dissociation constant
 	:bE => 1.02e-4,   # Fraction of the inactive GEM in the nucleus

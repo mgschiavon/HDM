@@ -71,7 +71,7 @@ open(string("OUT_Fit_",iARG.mm,"_",iARG.ex,".txt"), "w") do io
 			end
 			# Print results (either every iteration, prtW==1, or in the last iteration):
 			if(mrw.prtW==1 || i==mrw.iter)
-				writedlm(io, [vcat(ruN,0,mse0,[p[i] for i in mrw.pOp])],'\t')
+				writedlm(io, [vcat(ruN,i,mse0,[p[i] for i in mrw.pOp])],'\t')
 			end
 		end
 		println("I: MSE = ",mse0)
