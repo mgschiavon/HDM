@@ -79,7 +79,7 @@ module fn
 	# INPUT: Y - Vector of model values (i.e. steady state predictions)
 	#        D - Vector of data values (i.e. steady state measurements)
 	# OUPUT:   - Mean Squared Error
-	function MSE(X,D)
+	function MSE(Y,D)
 		return (sum((log10.(D) - log10.(Y)).^2)/std(log10.(D)))/length(Y);
 	end;
 end
