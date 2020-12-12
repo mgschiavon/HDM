@@ -1,8 +1,8 @@
 mrw  = (pOp  = [:mE,:mP,:bP],	# Parameters to optimize
 		pMin = [-3,-3,-3],		# Minimum parameter value to explore (log10)
 		pMax = [3,3,3],			# Maximum parameter value to explore (log10)
-		runs = 1000,			# Number of optimization runs
-		iter = 1000,			# Number of iterations per optimization run
+		runs = 10,			# Number of optimization runs
+		iter = 20,			# Number of iterations per optimization run
 		cov  = [0.1,0.1,0.1],	# Covariance to calculate parameter random walk
 		M    = 10,				# "Mutation step size" for multiplicative random walk
 		rnP0 = 0,				# Flag for random initial values of parameters to optimize
@@ -20,9 +20,8 @@ d = (Hi = x[1,2:end],		# Hormone (Pg) concentrations tested
 d.Xe[:,:] *= 0.4;
 
 # RULES:
-function myMSE(fn,mm,p,d)
+function mySS(fn,mm,p,d)
 	Y = zeros(size(d.Xe));
-	mse = 0;
 	# Updating parameters & data according to the used construct:
 	for i in 1:length(p[:eC])
 		p[:eP] = p[:eC][i];
@@ -34,8 +33,6 @@ function myMSE(fn,mm,p,d)
 			ss = fn.SS(mm.myODE, p, ones(length(mm.myODE.syms)), 1e-4, 0);
 			Y[i,h] = ss[1];
 		end
-		# Compare to data & calculate MSE:
-		mse += (fn.MSE(Y[i,:],d.Xe[i,:])/length(p[:eC]));
 	end
-	return [Y, mse]
+	return Y;
 end
