@@ -28,7 +28,7 @@ function mySS(fn,mm,p,d)
 		# Calculate steady state for each hormone concentration:
 		for h in 1:length(d.Hi)
 			p[:hP] = d.Hi[h];
-			pSynth(p,iSynTF_mu);
+			pSynth(p,fn.iSynTF_mu);
 			# Calculate steady states:
 			ss = fn.SS(mm.myODE, p, ones(length(mm.myODE.syms)), 1e-4, 0);
 			Y[i,h] = ss[1];
