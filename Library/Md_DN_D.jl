@@ -10,11 +10,11 @@ module mm
 
 	# ODE system
 	myODE = @ode_def begin
-		dY  = (mY * ((a * k) + AD)/(k + AD + D + DN)) - (g * Y)
+		dY  = (mY * ((aY * (kY^nY) + (AD^nY))/((kY^nY) + (AD^nY) + (D^nY) + (DN^nY))) - (g * Y)
 		dA  = mA - (g * A) + (eM * AD) - (eP * A * D)
 		dD  = mD - (g * D) + (eM * AD) - (eP * A * D) + (bM * DN) - (bP * D * N)
 		dN  = mN - (g * N)                            + (bM * DN) - (bP * D * N)
 		dAD =   - (g * AD) - (eM * AD) + (eP * A * D)
 		dDN =   - (g * DN)                            - (bM * DN) + (bP * D * N)
-	end g mA mD mN mY a n k eP eM bP bM;
+	end g mA mD mN mY aY nY kY eP eM bP bM;
 end 
