@@ -12,7 +12,7 @@
 # Load functions & system:
 using DelimitedFiles
 mm = include(string("Library\\Md_",iARG.mm,".jl"));	# ODE system
-fn = include(string("Library\\FN_HDM.jl"));			# Functions
+fn = include(string("Library\\FN_Fit.jl"));			# Functions
 
 ## INPUTS:
 # iARG = (mm : Label for motif file, ex : Label for parameters file);
