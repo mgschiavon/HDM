@@ -1,4 +1,4 @@
-mrw  = (pOp  = [:mE,:mP,:bP],	# Parameters to optimize
+mrw  = (pOp  = [:mE,:mP,:eC1],	# Parameters to optimize
 		pMin = [-3,-3,-3],		# Minimum parameter value to explore (log10)
 		pMax = [3,3,3],			# Maximum parameter value to explore (log10)
 		runs = 10,			# Number of optimization runs
@@ -23,8 +23,8 @@ d.Xe[:,:] *= 0.4;
 function mySS(fn,mm,p,d)
 	Y = zeros(size(d.Xe));
 	# Updating parameters & data according to the used construct:
-	for i in 1:length(p[:eC])
-		p[:eP] = p[:eC][i];
+	for i in 1:3
+		p[:eP] = [p[:eC1],p[:eC2],p[:eC3]][i];
 		# Calculate steady state for each hormone concentration:
 		for h in 1:length(d.Hi)
 			p[:hP] = d.Hi[h];
