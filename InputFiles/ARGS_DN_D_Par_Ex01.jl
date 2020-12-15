@@ -27,15 +27,15 @@ p = Dict([
 	:eC1 => 0.0375,   # A:D association (binding) rate - 154B_37A
 	:eC2 => 0.0375,   # A:D association (binding) rate - 154B_37B
 	:eC3 => 0.0375,   # A:D association (binding) rate - 154B_155A
-	:mA => NaN,	      # BY FUNCTION: A synthesis rate (nM/min)
-	:mD => 0.1,	      # Constitutive D synthesis rate (nM/min)
+	:mA => 0.1,	      # Constitutive A synthesis rate (nM/min)
+	:mD => NaN,	      # BY FUNCTION: D synthesis rate (nM/min)
 	:mN => NaN,	      # BY FUNCTION: N synthesis rate (nM/min)
 	:eP => NaN,       # BY RULE: A:D association (binding) rate (e.g. [0.0012,2000] 1/nM 1/min)
 ]);
 
 # Calculate/update synthesis rate according to gene regulation (e.g. iSynTF_mu(x,h,kX,b,m,a,n,k)):
 function pSynth(p,iSynTF_mu)
-	p[:mA] = iSynTF_mu(p[:xE],p[:hE],p[:kXE],p[:bE],p[:mE],p[:aE],p[:nE],p[:kE]);
+	p[:mD] = iSynTF_mu(p[:xE],p[:hE],p[:kXE],p[:bE],p[:mE],p[:aE],p[:nE],p[:kE]);
 	p[:mN] = iSynTF_mu(p[:xP],p[:hP],p[:kXP],p[:bP],p[:mP],p[:aP],p[:nP],p[:kP]);
 	return;
 end

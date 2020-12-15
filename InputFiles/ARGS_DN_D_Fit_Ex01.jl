@@ -14,8 +14,8 @@ using CSV
 using DataFrames
 x = CSV.File("DATA_Fig2B_Mean.csv") |> Tables.matrix;
 d = (Hi = x[1,2:end],		# Hormone (Pg) concentrations tested
-	 Xl = x[5:end,1],		# Experiment labels
-	 Xe = x[5:end,2:end]);	# YFP steady state measurements
+	 Xl = x[2:4,1],			# Experiment labels
+	 Xe = x[2:4,2:end]);	# YFP steady state measurements
 # Adjust measurement units (1 a.u.= 0.4 nM):
 d.Xe[:,:] *= 0.4;
 
