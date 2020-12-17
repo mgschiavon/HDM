@@ -13,5 +13,5 @@ module mm
 		dA  = mA - (g * A) + (eM * AD) - (eP * A * D)
 		dD  = mD - (g * D) + (eM * AD) - (eP * A * D)
 		dAD =   - (g * AD) - (eM * AD) + (eP * A * D)
-	end g mA mD mN mY aY nY kY eP eM;
+	end g mA mD mY aY nY kY eP eM;
 end
