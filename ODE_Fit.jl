@@ -20,12 +20,15 @@ fn = include(string("Library\\FN_Fit.jl"));			# Functions
 # iARG = (mm : Label for motif file, ex : Label for parameters file);
 include(string("InputFiles\\ARGS_",iARG.mm,"_Par_",iARG.ex,".jl"))	# System parameters (i.e. p structure -list of kinetic parameters)
 include(string("InputFiles\\ARGS_",iARG.mm,"_Fit_",iARG.ex,".jl"))	# Fitting rules (i.e. mrw structure -list of metropolis random walk parameters; d structure -experimental data/conditions; mySS -specific function to calculate steady states)
+pO = copy(p);
 
 # Run analysis
 open(string("OUT_Fit_",iARG.mm,"_",iARG.ex,".txt"), "w") do io
 	writedlm(io, [vcat("Run","Iteration","MSE",[string(param) for param in mrw.pOp])],'\t');
 	for ruN in 1:mrw.runs
 		println("RUN #",ruN)
+		## Reset parameters to input values:
+		p = copy(pO);
 		## Random initial values of parameters to optimize:
 		if(mrw.rnP0==1)
 			for i in 1:length(mrw.pOp)
@@ -62,7 +65,7 @@ open(string("OUT_Fit_",iARG.mm,"_",iARG.ex,".txt"), "w") do io
 			# Calculate new steady states + MSE:
 			mse1 = fn.MSE(mySS(fn,mm,p,d),d.Xe);
 			# Evaluate if accept new parameter values or not:
-			if(rand() < exp((mse0 - mse1) / mrwT[i]))
+			if(rand() < exp((mse0 - mse1) / mrwT[i]) || isnan(mse0))
 				# If yes, update "reference" system
 				mse0 = mse1;
 			else
