@@ -36,15 +36,16 @@ module fn
 	#        x0   - Vector of initial state of the ODE system
 	#        rtol - Tolerance value for ODE solver
 	# OUPUT: ss   - Vector of steady state of the ODE system
-	function SS(syst, p, x0, rtol, uns)
+	function SS(syst, p, x0, rtol)
 		pV = [p[i] for i in syst.params];
 		ss = try
 				solve(ODEProblem(syst,x0,1e6,pV),alg_hint=[:stiff],reltol=rtol,callback=TerminateSteadyState());
+				return last(ss.u);
 			 catch
-				x0.+NaN
 				println("WARNING: Error in steady state calculation. NaN values assigned instead.")
+				return x0.+NaN;
 			 end
-		return last(ss.u);
+		return ss;
 	end;
 
 	# ODE dynamics for a given system
