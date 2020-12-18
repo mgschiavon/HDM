@@ -40,12 +40,14 @@ module fn
 		pV = [p[i] for i in syst.params];
 		ss = try
 				solve(ODEProblem(syst,x0,1e6,pV),alg_hint=[:stiff],reltol=rtol,callback=TerminateSteadyState());
-				return last(ss.u);
 			 catch
 				println("WARNING: Error in steady state calculation. NaN values assigned instead.")
-				return x0.+NaN;
 			 end
-		return ss;
+		 if(typeof(ss)==Nothing)
+			return x0.+NaN
+		 else
+			return last(ss.u)
+		end
 	end;
 
 	# ODE dynamics for a given system
