@@ -35,13 +35,15 @@ module fn
 	#        p    - Dictionary function with the ODE parameters & values
 	#        x0   - Vector of initial state of the ODE system
 	#        rtol - Tolerance value for ODE solver
-	#        uns  - 1 to use a slower, more stable ODE solver
 	# OUPUT: ss   - Vector of steady state of the ODE system
 	function SS(syst, p, x0, rtol, uns)
 		pV = [p[i] for i in syst.params];
-		cb1 = PositiveDomain(save=true,abstol=nothing,scalefactor=nothing);
-		cb2 = TerminateSteadyState();
-		ss  = solve(ODEProblem(syst,x0,1e6,pV),alg_hint=[:stiff],reltol=1e-3,callback=CallbackSet(cb1,cb2));
+		ss = try
+				solve(ODEProblem(syst,x0,1e6,pV),alg_hint=[:stiff],reltol=rtol,callback=TerminateSteadyState());
+			 catch
+				x0.+NaN
+				println("WARNING: Error in steady state calculation. NaN values assigned instead.")
+			 end
 		return last(ss.u);
 	end;
 

@@ -62,7 +62,7 @@ open(string("OUT_Fit_",iARG.mm,"_",iARG.ex,".txt"), "w") do io
 			# Calculate new steady states + MSE:
 			mse1 = fn.MSE(mySS(fn,mm,p,d),d.Xe);
 			# Evaluate if accept new parameter values or not:
-			if(rand() < exp((mse0 - mse1) / mrwT[i]))
+			if(rand() < exp((mse0 - mse1) / mrwT[i]) || isnan(mse0))
 				# If yes, update "reference" system
 				mse0 = mse1;
 			else
