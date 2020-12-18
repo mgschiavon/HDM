@@ -39,29 +39,10 @@ module fn
 	# OUPUT: ss   - Vector of steady state of the ODE system
 	function SS(syst, p, x0, rtol, uns)
 		pV = [p[i] for i in syst.params];
-		if (uns == 1)
-			s0 = x0;
-			t = 0.
-			while (any([abs(x) for x in syst(s0, pV, 0.)] .> (rtol * s0)) && t<1e6)
-				ss = solve(ODEProblem(syst,s0,10000.,pV),AutoTsit5(Rosenbrock23()),reltol=rtol);
-				t += 100.;
-				s0 = last(ss.u);
-				#println("Time: ",t,", ",s0)
-				end;
-			return s0
-		else
-			ss = solve(SteadyStateProblem(syst, x0, pV), SSRootfind());
-			# Verify this is the steady state:
-			if any(ss.u .< 0)
-				ss = solve(SteadyStateProblem(syst, x0, pV), DynamicSS(Rodas5(); reltol=rtol));
-				return ss.u
-			end
-			if any([abs(x) for x in syst(ss.u, pV, 0.)] .> (rtol * ss.u))
-				ss = solve(SteadyStateProblem(syst, ss.u, pV), DynamicSS(Rodas5(); reltol=rtol));
-				return ss.u
-			end
-			return ss.u
-			end
+		cb1 = PositiveDomain(save=true,abstol=nothing,scalefactor=nothing);
+		cb2 = TerminateSteadyState();
+		ss  = solve(ODEProblem(syst,x0,1e6,pV),alg_hint=[:stiff],reltol=1e-3,callback=CallbackSet(cb1,cb2));
+		return last(ss.u);
 	end;
 
 	# ODE dynamics for a given system
