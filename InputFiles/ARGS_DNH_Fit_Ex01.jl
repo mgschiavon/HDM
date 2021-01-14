@@ -30,7 +30,7 @@ function mySS(fn,mm,p,d)
 			p[:hP] = d.Hi[h];
 			pSynth(p,fn.iSynTF_mu);
 			# Calculate steady states:
-			ss = fn.SS(mm.myODE_D, p, ones(length(mm.myODE.syms)), 1e-4, 1);
+			ss = fn.SS(mm.odeD, p, ones(length(mm.odeD.syms)), 1e-4);
 			Y[i,h] = ss[1];
 		end
 	end
@@ -41,7 +41,7 @@ function mySS(fn,mm,p,d)
 			p[:hP] = d.Hi[h];
 			pSynth(p,fn.iSynTF_mu);
 			# Calculate steady states:
-			ss = fn.SS(mm.myODE_A, p, ones(length(mm.myODE.syms)), 1e-4, 1);
+			ss = fn.SS(mm.odeA, p, ones(length(mm.odeA.syms)), 1e-4);
 			Y[i+3,h] = ss[1];
 		end
 	end

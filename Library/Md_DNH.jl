@@ -10,7 +10,7 @@ module mm
 	using ParameterizedFunctions
 
 	# ODE system -- N:A vs A:D
-	myODE_A = @ode_def begin
+	odeA = @ode_def begin
 		dY  = (mY * ((aY * (kY^nY)) + (AD^nY))/((kY^nY) + (AD^nY) + (D^nY))) - (g * Y)
 		dA  = mA - (g * A) + (eM * AD) - (eP * A * D) + (bM * AN) - (bP * A * N)
 		dD  = mD - (g * D) + (eM * AD) - (eP * A * D)
@@ -20,7 +20,7 @@ module mm
 	end g mA mD mN mY aY nY kY eP eM bP bM;
 
 	# ODE system -- N:D vs A:D
-	myODE_D = @ode_def begin
+	odeD = @ode_def begin
 		dY  = (mY * ((aY * (kY^nY)) + (AD^nY))/((kY^nY) + (AD^nY) + (D^nY) + (DN^nY))) - (g * Y)
 		dA  = mA - (g * A) + (eM * AD) - (eP * A * D)
 		dD  = mD - (g * D) + (eM * AD) - (eP * A * D) + (bM * DN) - (bP * D * N)
