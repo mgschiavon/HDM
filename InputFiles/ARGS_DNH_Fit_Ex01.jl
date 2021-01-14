@@ -14,8 +14,8 @@ using CSV
 using DataFrames
 x = CSV.File("DATA_Fig2B_Mean.csv") |> Tables.matrix;
 d = (Hi = x[1,2:end],		# Hormone (Pg) concentrations tested
-	 Xl = x[5:end,1],		# Experiment labels
-	 Xe = x[5:end,2:end]);	# YFP steady state measurements
+	 Xl = x[2:end,1],		# Experiment labels
+	 Xe = x[2:end,2:end]);	# YFP steady state measurements
 # Adjust measurement units (1 a.u.= 0.4 nM):
 d.Xe[:,:] *= 0.4;
 
@@ -30,8 +30,19 @@ function mySS(fn,mm,p,d)
 			p[:hP] = d.Hi[h];
 			pSynth(p,fn.iSynTF_mu);
 			# Calculate steady states:
-			ss = fn.SS(mm.myODE, p, ones(length(mm.myODE.syms)), 1e-4, 1);
+			ss = fn.SS(mm.myODE_D, p, ones(length(mm.myODE.syms)), 1e-4, 1);
 			Y[i,h] = ss[1];
+		end
+	end
+	for i in 1:3
+		p[:eP] = [p[:eC1],p[:eC2],p[:eC3]][i];
+		# Calculate steady state for each hormone concentration:
+		for h in 1:length(d.Hi)
+			p[:hP] = d.Hi[h];
+			pSynth(p,fn.iSynTF_mu);
+			# Calculate steady states:
+			ss = fn.SS(mm.myODE_A, p, ones(length(mm.myODE.syms)), 1e-4, 1);
+			Y[i+3,h] = ss[1];
 		end
 	end
 	return Y;
