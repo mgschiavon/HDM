@@ -21,20 +21,15 @@ p = Dict([
 	:aY => 0.05,      # Basal activity
 	:nY => 1.0,       # Hill function
 	:kY => 1.0,       # Dissociation constant (nM)
+  :bP => 0.05,      # A:N or D:N association (binding) rate (e.g. [0.0012,2000] 1/nM 1/min)
 	:bM => 0.01,      # A:N or D:N dissociation (unbinding) rate (e.g. [0.05,140] 1/min)
 	:eM => 0.01,      # A:D dissociation (unbinding) rate (e.g. [0.05,140] 1/min)
-	:bC1 => 0.05,     # A:N association (binding) rate (e.g. [0.0012,2000] 1/nM 1/min)
-	:bC2 => 0.05,     # D:N association (binding) rate (e.g. [0.0012,2000] 1/nM 1/min)
-	:eC1 => 0.001,    # A:D association (binding) rate - 154B_37A
-	:eC2 => 0.003,    # A:D association (binding) rate - 154B_37B
-	:eC3 => 0.01,     # A:D association (binding) rate - 154B_155A
-	:eC4 => 0.001,    # A:D association (binding) rate - 37A:154B
-	:eC5 => 0.003,    # A:D association (binding) rate - 13B:154B
-	:eC6 => 0.01,     # A:D association (binding) rate - 37B:154B
+	:eC1 => 0.001,    # A:D association (binding) rate - Pair #1
+	:eC2 => 0.003,    # A:D association (binding) rate - Pair #2
+	:eC3 => 0.01,     # A:D association (binding) rate - Pair #3
 	:mA => NaN,	      # BY FUNCTION: A synthesis rate (nM/min)
 	:mD => NaN,	      # BY FUNCTION: D synthesis rate (nM/min)
 	:mN => NaN,	      # BY FUNCTION: N synthesis rate (nM/min)
-	:bP => NaN,       # BY RULE: A:N or D:N association (binding) rate (e.g. [0.0012,2000] 1/nM 1/min)
 	:eP => NaN,       # BY RULE: A:D association (binding) rate (e.g. [0.0012,2000] 1/nM 1/min)
 ]);
 
