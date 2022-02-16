@@ -1,6 +1,10 @@
 # HDM
 Heterodimer models
 
+Code associated to:
+
+Nguyen, Taylor H., Galen Dods, Mariana Gómez-Schiavon, Muziyue Wu, Zibo Chen, Ryan Kibler, David Baker, Hana El-Samad, and Andrew H. Ng. “Competitive Displacement of De Novo Designed HeteroDimers Can Reversibly Control Protein–Protein Interactions and Implement Feedback in Synthetic Circuits.” GEN Biotechnology 1, no. 1 (February 2022): 91–100. https://doi.org/10.1089/genbio.2021.0011.
+
 ## General fitting pipeline
 
 1. [Run_ODE_Fit.txt](https://github.com/mgschiavon/HDM/blob/main/Run_ODE_Fit.txt) : Running instructions for the particular system (labels for ODE system file, `myODElabel`, and for parameters files, `myEXlabel`).
