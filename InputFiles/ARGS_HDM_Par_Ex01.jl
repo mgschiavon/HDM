@@ -1,6 +1,6 @@
 # Kinetic parameters
 p = Dict([
-    :g  => 0.01,      # Dilution rate (e.g. [0.01,0.24] 1/min)
+	:g  => 0.01,      # Dilution rate (e.g. [0.01,0.24] 1/min)
 	:xE => 0.0607,    # GEM iSynTF concentration (nM)
 	:hE => 36.0,      # E2 concentration (nM)
 	:mE => 0.0159,    # Maximum synthesis rate regulated by GEM
@@ -17,15 +17,15 @@ p = Dict([
 	:aP => 0.0153,    # Basal expression (in the absence of Z3PM)
 	:nP => 2.64,      # Hill coefficient for Z3PM regulation
 	:kP => 0.0683,    # Z3PM:promoter dissociation constant
-	:mY => 0.1,       # Y maximum synthesis rate (nM/min)
+	:mY => 0.05,      # Y maximum synthesis rate (nM/min)
 	:aY => 0.01,      # Basal activity
-	:nY => 2.5,       # Hill function
-	:kY => 1.0,       # Dissociation constant\
+	:nY => 1.0,       # Hill function
+	:kY => 0.02,      # Dissociation constant\
 	:eM => 0.01,      # A:D dissociation (unbinding) rate (e.g. [0.05,140] 1/min)
-	:eC1 => 0.0375,   # A:D association (binding) rate - 37A-B
-	:eC2 => 0.0375,   # A:D association (binding) rate - 154A-B
-	:mA => NaN,	      # BY FUNCTION: A synthesis rate (nM/min)
-	:mD => NaN,	      # Constitutive D synthesis rate (nM/min)
+	:eC1 => 0.05,     # A:D association (binding) rate - 37A-B
+	:eC2 => 0.05,     # A:D association (binding) rate - 154A-B
+	:mA => NaN,       # BY FUNCTION: A synthesis rate (nM/min)
+	:mD => NaN,       # Constitutive D synthesis rate (nM/min)
 	:eP => NaN,       # BY RULE: A:D association (binding) rate (e.g. [0.0012,2000] 1/nM 1/min)
 ]);
 
